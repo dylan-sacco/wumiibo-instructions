@@ -3,13 +3,13 @@
 MainMenu::MainMenu(){
     m_selected = 0;
 
+    m_options.push_back("Select Amiibos for game");
     m_options.push_back("Download Wumiibo");
-    m_options.push_back("Generate amiibos for game");
     m_options.push_back("Toggle Wumiibo State");
-
-    m_descriptions.push_back("Description: Downloads and installs latest wumiibo.");
-    m_descriptions.push_back("Description: Generate compatible amiibos for a game.");
-    m_descriptions.push_back("Description: Enable/Disable Wumiibo");
+    
+    m_descriptions.push_back("Description: Choose which Amiibos you want to use with your games.");
+    m_descriptions.push_back("Description: Downloads the selected Amiibos to your device and enables Wumiibo (restarts the device).");
+    m_descriptions.push_back("Description: Enables/Disables the Wumiibo system service.");
 }
 
 MainMenu::~MainMenu() {}
@@ -50,10 +50,10 @@ std::optional<ui::States> MainMenu::HandleEvent(){
     if(kDown & KEY_A){
         switch(m_selected){
             case 0:
-                return ui::States::Download;
+                return ui::States::GameSelection;
                 break;
             case 1:
-                return ui::States::GameSelection;
+                return ui::States::Download;
                 break;
             case 2:
                 return ui::States::ToggleState;

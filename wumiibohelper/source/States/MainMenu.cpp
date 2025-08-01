@@ -1,4 +1,6 @@
 #include "MainMenu.hpp"
+#include "../Utils/Misc.hpp"
+
 
 MainMenu::MainMenu(){
     m_selected = 0;
@@ -6,7 +8,12 @@ MainMenu::MainMenu(){
     // Last Edit By: Dylan Sacco
     m_options.push_back("Select Amiibos for game");
     m_options.push_back("Download Wumiibo");
-    m_options.push_back("Toggle Wumiibo State");
+    // Toggle Status Option (Dynamic)
+    bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+    std::string toggleLabel = wumiiboEnabled
+        ? "Toggle Wumiibo State (Enabled)"
+        : "Toggle Wumiibo State (Disabled)";
+    m_options.push_back(toggleLabel);
     
     m_descriptions.push_back("Description: Select Amiibos to use with your games.");
     m_descriptions.push_back("Description: Download selected Amiibos and enables Wumiibo.");
@@ -69,6 +76,13 @@ std::optional<ui::States> MainMenu::HandleEvent(){
                 break;
             case 2:
                 return ui::States::ToggleState;
+                // When coming back from ToggleState, refresh label
+                bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+                m_options[2] = wumiiboEnabled
+                    ? "Toggle Wumiibo State (Enabled)"
+                    : "Toggle Wumiibo State (Disabled)";
+                C2D_TextParse(&m_optiontexts[2], m_textbuf, m_options[2].c_str());
+                C2D_TextOptimize(&m_optiontexts[2]);
                 break;
         }
     }

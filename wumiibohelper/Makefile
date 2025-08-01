@@ -42,6 +42,7 @@ ROMFS			:=	romfs
 #GFXBUILD		:=	$(ROMFS)/gfx
 
 APP_TITLE		:=	Wumiibo-Helper
+APP_VERSION     :=  "\"4.3\"" #Follow Major.Minor
 APP_DESCRIPTION	:=	Helper for generating amiibo files
 APP_AUTHOR		:=	hax0kartik
 ICON			:=	gfx/icon_app.png
@@ -59,6 +60,8 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -D__3DS__
+ 
+CFLAGS  += -DAPP_VERSION=$(APP_VERSION)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++20
 

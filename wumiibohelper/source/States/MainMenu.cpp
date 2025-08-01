@@ -9,7 +9,7 @@ MainMenu::MainMenu(){
     m_options.push_back("Toggle Wumiibo State");
     
     m_descriptions.push_back("Description: Select Amiibos to use with your games.");
-    m_descriptions.push_back("Description: Download selected Amiibos and enable Wumiibo.");
+    m_descriptions.push_back("Description: Download selected Amiibos and enables Wumiibo.");
     m_descriptions.push_back("Description: Enables/Disables the Wumiibo system service.");
 }
 
@@ -32,8 +32,8 @@ void MainMenu::OnStateEnter(App *app){
 
     // Parse and optimize instruction text
     // Added By: Dylan Sacco
-    const char* instruction1 = "After downloading the Amiibos, boot the game";
-    const char* instruction2 = "and press LB + Down + Start to select an Amiibo";
+    const char* instruction1 = "After downloading Wumiibo (option 2), boot the game";
+    const char* instruction2 = "and press (LB + Down + Start) to select an Amiibo";
 
     C2D_TextParse(&m_instructionTextLine1, m_textbuf, instruction1);
     C2D_TextOptimize(&m_instructionTextLine1);

@@ -26,4 +26,5 @@ class MainMenu : public ui::State{
         // Instruction text for mod menu hint
         C2D_Text m_instructionTextLine1;
         C2D_Text m_instructionTextLine2;
+        C2D_Text m_versiontext;
 };

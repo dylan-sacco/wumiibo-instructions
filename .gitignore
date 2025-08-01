@@ -20,3 +20,6 @@ sdmc/
 
 # Visual Studio Code settings (optional)
 .vscode/
+
+# other files
+*.zip

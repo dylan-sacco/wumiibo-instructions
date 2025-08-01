@@ -6,7 +6,7 @@ MainMenu::MainMenu(){
     m_selected = 0;
 
     // Last Edit By: Dylan Sacco
-    m_options.push_back("Select Amiibos for game");
+    m_options.push_back("Select Amiibos For Game");
     m_options.push_back("Download Wumiibo");
     // Toggle Status Option (Dynamic)
     bool wumiiboEnabled = Utils::Misc::CheckWumiibo();

@@ -1,14 +1,22 @@
 #include "MainMenu.hpp"
+#include "../Utils/Misc.hpp"
+
 
 MainMenu::MainMenu(){
     m_selected = 0;
 
-    m_options.push_back("Select Amiibos for game");
+    // Last Edit By: Dylan Sacco
+    m_options.push_back("Select Amiibos For Game");
     m_options.push_back("Download Wumiibo");
-    m_options.push_back("Toggle Wumiibo State");
+    // Toggle Status Option (Dynamic)
+    bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+    std::string toggleLabel = wumiiboEnabled
+        ? "Toggle Wumiibo State (Enabled)"
+        : "Toggle Wumiibo State (Disabled)";
+    m_options.push_back(toggleLabel);
     
-    m_descriptions.push_back("Description: Choose which Amiibos you want to use with your games.");
-    m_descriptions.push_back("Description: Downloads the selected Amiibos to your device and enables Wumiibo (restarts the device).");
+    m_descriptions.push_back("Description: Select Amiibos to use with your games.");
+    m_descriptions.push_back("Description: Download selected Amiibos and enables Wumiibo.");
     m_descriptions.push_back("Description: Enables/Disables the Wumiibo system service.");
 }
 
@@ -28,6 +36,21 @@ void MainMenu::OnStateEnter(App *app){
         C2D_TextParse(&m_descriptiontexts[i], m_textbuf, m_descriptions[i].c_str());
         C2D_TextOptimize(&m_descriptiontexts[i]);
     }
+
+    // Parse and optimize instruction text
+    // Added By: Dylan Sacco
+    const char* instruction1 = "After downloading Wumiibo (option 2), boot the game";
+    const char* instruction2 = "and press (LB + Down + Start) to select an Amiibo";
+
+    C2D_TextParse(&m_instructionTextLine1, m_textbuf, instruction1);
+    C2D_TextOptimize(&m_instructionTextLine1);
+
+    C2D_TextParse(&m_instructionTextLine2, m_textbuf, instruction2);
+    C2D_TextOptimize(&m_instructionTextLine2);
+  
+    std::string versionStr = "v" APP_VERSION;
+    C2D_TextParse(&m_versiontext, m_textbuf, versionStr.c_str());
+    C2D_TextOptimize(&m_versiontext);
 }
 
 void MainMenu::OnStateExit(App *app){
@@ -57,6 +80,13 @@ std::optional<ui::States> MainMenu::HandleEvent(){
                 break;
             case 2:
                 return ui::States::ToggleState;
+                // When coming back from ToggleState, refresh label
+                bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+                m_options[2] = wumiiboEnabled
+                    ? "Toggle Wumiibo State (Enabled)"
+                    : "Toggle Wumiibo State (Disabled)";
+                C2D_TextParse(&m_optiontexts[2], m_textbuf, m_options[2].c_str());
+                C2D_TextOptimize(&m_optiontexts[2]);
                 break;
         }
     }
@@ -78,6 +108,13 @@ void MainMenu::RenderLoop(){
     C2D_TargetClear(top, C2D_Color32(0xEC, 0xF0, 0xF1, 0xFF));
     ui::Elements::DrawBars(ui::Screen::Top);
     ui::Elements::Icon::GetInstance().DrawIconInMiddle(ui::Screen::Top);
+
+    // Draw instruction text at the very top
+    // Added By: Dylan Sacco
+    C2D_DrawText(&m_instructionTextLine1, 0, 10.0f, 15.0f, 1.0f, 0.5f, 0.5f);
+    C2D_DrawText(&m_instructionTextLine2, 0, 10.0f, 35.0f, 1.0f, 0.5f, 0.5f);
+
+    // Draw description
     C2D_DrawText(&m_descriptiontexts[m_selected], 0, 10.0f, 210.0f, 1.0f, 0.5f, 0.5f);
 
     /* Bottom */
@@ -92,4 +129,12 @@ void MainMenu::RenderLoop(){
         C2D_DrawText(&m_optiontexts[i], C2D_AlignCenter, 160.0f, y, 1.0f, 0.5f, 0.5f);
         y += 30.0f;
     }
+    // Draw version string in top-right corner
+    float textWidth, textHeight;
+    C2D_TextGetDimensions(&m_versiontext, 0.5f, 0.5f, &textWidth, &textHeight);
+
+    // Adjust X so it hugs the right edge with padding
+    float versionY = 10.0f;
+    float versionX = ui::Dimensions::GetWidth(ui::Screen::Bottom) - textWidth - 10.0f;
+    C2D_DrawText(&m_versiontext, 0, versionX, versionY, 1.0f, 0.5f, 0.5f);
 }

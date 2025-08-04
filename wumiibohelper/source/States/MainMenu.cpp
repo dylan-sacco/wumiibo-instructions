@@ -5,7 +5,11 @@ MainMenu::MainMenu(){
 
     m_options.push_back("Download Wumiibo");
     m_options.push_back("Generate amiibos for game");
-    m_options.push_back("Toggle Wumiibo State");
+    bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+    std::string toggleLabel = wumiiboEnabled
+        ? "Toggle Wumiibo State (Enabled)"
+        : "Toggle Wumiibo State (Disabled)";
+    m_options.push_back(toggleLabel);
 
     m_descriptions.push_back("Description: Downloads and installs latest wumiibo.");
     m_descriptions.push_back("Description: Generate compatible amiibos for a game.");
@@ -57,6 +61,13 @@ std::optional<ui::States> MainMenu::HandleEvent(){
                 break;
             case 2:
                 return ui::States::ToggleState;
+                // When coming back from ToggleState, refresh label
+                bool wumiiboEnabled = Utils::Misc::CheckWumiibo();
+                m_options[2] = wumiiboEnabled
+                    ? "Toggle Wumiibo State (Enabled)"
+                    : "Toggle Wumiibo State (Disabled)";
+                C2D_TextParse(&m_optiontexts[2], m_textbuf, m_options[2].c_str());
+                C2D_TextOptimize(&m_optiontexts[2]);
                 break;
         }
     }
